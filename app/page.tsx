@@ -1,65 +1,120 @@
-import Image from "next/image";
+"use client"
+
+import { useState } from 'react'
+import Globe, { ViewMode } from '@/components/Globe'
+import SidePanel from '@/components/SidePanel'
+import ModeSelector from '@/components/ModeSelector'
+import StatsOverlay from '@/components/StatsOverlay'
 
 export default function Home() {
+  const [mode, setMode] = useState<ViewMode>('countries')
+  const [selectedData, setSelectedData] = useState<any>(null)
+  const [isPanelOpen, setIsPanelOpen] = useState(false)
+
+  const handleMarkerClick = (data: any) => {
+    setSelectedData(data)
+    setIsPanelOpen(true)
+  }
+
+  const handleClosePanel = () => {
+    setIsPanelOpen(false)
+  }
+
+  const handleModeChange = (newMode: ViewMode) => {
+    setMode(newMode)
+    setIsPanelOpen(false)
+    setSelectedData(null)
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main className="relative w-full h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 overflow-hidden">
+      {/* Animated background stars */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="stars"></div>
+        <div className="stars2"></div>
+        <div className="stars3"></div>
+      </div>
+
+      {/* Stats Overlay */}
+      <StatsOverlay mode={mode} />
+
+      {/* Main Content */}
+      <div className="relative z-10 flex flex-col items-center justify-center h-full p-6">
+        {/* Mode Selector */}
+        <div className="mb-8">
+          <ModeSelector currentMode={mode} onModeChange={handleModeChange} />
+        </div>
+
+        {/* Globe */}
+        <div className="flex-1 w-full max-w-5xl flex items-center justify-center">
+          <Globe
+            mode={mode}
+            onMarkerClick={handleMarkerClick}
+            className="w-full h-full"
+          />
+        </div>
+
+        {/* Instructions */}
+        <div className="mt-6 text-center">
+          <p className="text-slate-400 text-sm">
+            Click and drag to rotate • Click markers to view details
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+      </div>
+
+      {/* Side Panel */}
+      <SidePanel
+        isOpen={isPanelOpen}
+        onClose={handleClosePanel}
+        data={selectedData}
+        mode={mode}
+      />
+
+      {/* CSS for animated stars */}
+      <style jsx>{`
+        .stars, .stars2, .stars3 {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          background: transparent;
+          box-shadow: ${generateStarField(200)};
+          animation: animStar 50s linear infinite;
+        }
+
+        .stars2 {
+          width: 2px;
+          height: 2px;
+          box-shadow: ${generateStarField(100)};
+          animation: animStar 100s linear infinite;
+        }
+
+        .stars3 {
+          width: 3px;
+          height: 3px;
+          box-shadow: ${generateStarField(50)};
+          animation: animStar 150s linear infinite;
+        }
+
+        @keyframes animStar {
+          from {
+            transform: translateY(0px);
+          }
+          to {
+            transform: translateY(-2000px);
+          }
+        }
+      `}</style>
+    </main>
+  )
+}
+
+// Helper function to generate random star field
+function generateStarField(count: number): string {
+  let stars = ''
+  for (let i = 0; i < count; i++) {
+    const x = Math.floor(Math.random() * 2000)
+    const y = Math.floor(Math.random() * 2000)
+    stars += `${x}px ${y}px #FFF${i < count - 1 ? ', ' : ''}`
+  }
+  return stars
 }

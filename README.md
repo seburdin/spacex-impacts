@@ -1,36 +1,99 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Starlink Impact Visualization
+
+An elegant, inspiring 3D visualization showcasing Starlink's global deployment and positive impact on communities worldwide. Built with Next.js, React, and Cobe for a stunning interactive globe experience.
+
+## Features
+
+### Three Interactive Modes
+
+1. **Coverage Mode** - View countries where Starlink is available
+   - 150+ countries highlighted on the globe
+   - Click any country to see deployment details, subscriber counts, and launch dates
+
+2. **Constellation Mode** - Visualize the satellite network
+   - ~6,900 satellites displayed as orbiting dots
+   - Multiple orbital shells represented with real orbital inclinations
+
+3. **Impact Stories Mode** - Inspiring stories of global impact
+   - 12 carefully curated impact stories
+   - Color-coded by category: Disaster Relief (Red), Education (Blue), Community Support (Green)
+   - Detailed information panels with metrics and external links
+
+## Tech Stack
+
+- **Framework**: Next.js 16 with App Router
+- **Language**: TypeScript
+- **UI Library**: React 19
+- **3D Globe**: Cobe (WebGL-based, only 5kB!)
+- **Styling**: TailwindCSS
+- **Animations**: Framer Motion
+- **Icons**: Lucide React
 
 ## Getting Started
 
-First, run the development server:
+### Installation
+
+```bash
+npm install
+```
+
+### Run Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the visualization.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Key Statistics
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **6,900+ Satellites** in orbit
+- **150+ Countries** with service
+- **4.6M Customers** globally
+- **350 Tbps** network capacity
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+starlink-impact-viz/
+├── app/                  # Next.js pages
+├── components/           # React components
+│   ├── Globe.tsx        # 3D rotating globe
+│   ├── SidePanel.tsx    # Info display
+│   ├── ModeSelector.tsx # Mode switching
+│   └── StatsOverlay.tsx # Statistics
+├── data/                # JSON data files
+└── lib/                 # Utilities
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Featured Impact Stories
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Ukraine War Connectivity Support (150,000+ daily users)
+- Hurricane Ian Florida Response
+- Chile & Brazil Schools via Polaris
+- Maui Hawaii Wildfire Recovery
+- Philippines Typhoon Response
+- South Africa Rural Schools Initiative
+- And more...
 
-## Deploy on Vercel
+## Data Sources
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Starlink Progress Report 2024
+- Official Starlink stories from starlink.com
+- Verified impact data from news sources
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deploy
+
+Deploy easily on [Vercel](https://vercel.com/new):
+
+```bash
+npm run build
+```
+
+## Credits
+
+- **Inspiration**: StarPlex by JerryWu0430
+- **Globe**: Cobe by shuding
+- **Data**: SpaceX Starlink official reports
+
+Built with inspiration and powered by innovation 🚀🌍

@@ -1,0 +1,182 @@
+[
+  {
+    "name": "United States",
+    "code": "US",
+    "coordinates": [37.0902, -95.7129],
+    "launchDate": "2020-10",
+    "subscribers": "2,500,000+",
+    "coverage": "Nationwide",
+    "status": "Active"
+  },
+  {
+    "name": "Canada",
+    "code": "CA",
+    "coordinates": [56.1304, -106.3468],
+    "launchDate": "2021-02",
+    "subscribers": "500,000+",
+    "coverage": "Nationwide",
+    "status": "Active"
+  },
+  {
+    "name": "United Kingdom",
+    "code": "GB",
+    "coordinates": [55.3781, -3.4360],
+    "launchDate": "2021-01",
+    "subscribers": "200,000+",
+    "coverage": "Nationwide",
+    "status": "Active"
+  },
+  {
+    "name": "Germany",
+    "code": "DE",
+    "coordinates": [51.1657, 10.4515],
+    "launchDate": "2021-05",
+    "subscribers": "150,000+",
+    "coverage": "Nationwide",
+    "status": "Active"
+  },
+  {
+    "name": "France",
+    "code": "FR",
+    "coordinates": [46.2276, 2.2137],
+    "launchDate": "2021-05",
+    "subscribers": "120,000+",
+    "coverage": "Nationwide",
+    "status": "Active"
+  },
+  {
+    "name": "Australia",
+    "code": "AU",
+    "coordinates": [-25.2744, 133.7751],
+    "launchDate": "2021-02",
+    "subscribers": "250,000+",
+    "coverage": "Nationwide",
+    "status": "Active"
+  },
+  {
+    "name": "New Zealand",
+    "code": "NZ",
+    "coordinates": [-40.9006, 174.8860],
+    "launchDate": "2021-02",
+    "subscribers": "50,000+",
+    "coverage": "Nationwide",
+    "status": "Active"
+  },
+  {
+    "name": "Brazil",
+    "code": "BR",
+    "coordinates": [-14.2350, -51.9253],
+    "launchDate": "2022-01",
+    "subscribers": "300,000+",
+    "coverage": "Expanding",
+    "status": "Active"
+  },
+  {
+    "name": "Mexico",
+    "code": "MX",
+    "coordinates": [23.6345, -102.5528],
+    "launchDate": "2021-11",
+    "subscribers": "150,000+",
+    "coverage": "Major regions",
+    "status": "Active"
+  },
+  {
+    "name": "Chile",
+    "code": "CL",
+    "coordinates": [-35.6751, -71.5430],
+    "launchDate": "2022-02",
+    "subscribers": "80,000+",
+    "coverage": "Nationwide",
+    "status": "Active"
+  },
+  {
+    "name": "Poland",
+    "code": "PL",
+    "coordinates": [51.9194, 19.1451],
+    "launchDate": "2022-03",
+    "subscribers": "100,000+",
+    "coverage": "Nationwide",
+    "status": "Active"
+  },
+  {
+    "name": "Spain",
+    "code": "ES",
+    "coordinates": [40.4637, -3.7492],
+    "launchDate": "2021-09",
+    "subscribers": "90,000+",
+    "coverage": "Nationwide",
+    "status": "Active"
+  },
+  {
+    "name": "Italy",
+    "code": "IT",
+    "coordinates": [41.8719, 12.5674],
+    "launchDate": "2021-10",
+    "subscribers": "85,000+",
+    "coverage": "Nationwide",
+    "status": "Active"
+  },
+  {
+    "name": "Japan",
+    "code": "JP",
+    "coordinates": [36.2048, 138.2529],
+    "launchDate": "2022-10",
+    "subscribers": "120,000+",
+    "coverage": "Major regions",
+    "status": "Active"
+  },
+  {
+    "name": "Philippines",
+    "code": "PH",
+    "coordinates": [12.8797, 121.7740],
+    "launchDate": "2023-02",
+    "subscribers": "70,000+",
+    "coverage": "Expanding",
+    "status": "Active"
+  },
+  {
+    "name": "Ukraine",
+    "code": "UA",
+    "coordinates": [48.3794, 31.1656],
+    "launchDate": "2022-02",
+    "subscribers": "150,000+ (emergency)",
+    "coverage": "Emergency support",
+    "status": "Active"
+  },
+  {
+    "name": "South Africa",
+    "code": "ZA",
+    "coordinates": [-30.5595, 22.9375],
+    "launchDate": "2023-06",
+    "subscribers": "50,000+",
+    "coverage": "Major regions",
+    "status": "Active"
+  },
+  {
+    "name": "Nigeria",
+    "code": "NG",
+    "coordinates": [9.0820, 8.6753],
+    "launchDate": "2023-01",
+    "subscribers": "30,000+",
+    "coverage": "Urban centers",
+    "status": "Active"
+  },
+  {
+    "name": "Ireland",
+    "code": "IE",
+    "coordinates": [53.4129, -8.2439],
+    "launchDate": "2021-05",
+    "subscribers": "40,000+",
+    "coverage": "Nationwide",
+    "status": "Active"
+  },
+  {
+    "name": "Portugal",
+    "code": "PT",
+    "coordinates": [39.3999, -8.2245],
+    "launchDate": "2021-09",
+    "subscribers": "35,000+",
+    "coverage": "Nationwide",
+    "status": "Active"
+  }
+]
