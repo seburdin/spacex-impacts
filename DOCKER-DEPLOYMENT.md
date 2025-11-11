@@ -150,7 +150,7 @@ Railway is configured to build from Dockerfile:
 
 **Note:** Railway currently builds from Dockerfile on push. We're working on configuring it to pull pre-built images from GHCR.
 
-#### Option 2: Pull from GHCR (Future)
+#### Option 2: Pull from GHCR (testing)
 
 To pull pre-built images instead of building:
 
