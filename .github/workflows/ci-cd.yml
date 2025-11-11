@@ -54,11 +54,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: lint-and-test
     if: |
-      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/claude/'))) ||
       (github.event_name == 'workflow_dispatch' && github.event.inputs.deploy == 'true')
     permissions:
       contents: read
       packages: write
+      id-token: write  # Required for attestation
+      attestations: write  # Required for attestation
 
     outputs:
       image-tag: ${{ steps.meta.outputs.tags }}
@@ -109,6 +111,7 @@ jobs:
           platforms: linux/amd64
 
       - name: Generate artifact attestation
+        if: github.ref == 'refs/heads/main'  # Only attest production images
         uses: actions/attest-build-provenance@v1
         with:
           subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
@@ -119,7 +122,12 @@ jobs:
     name: Deploy to Railway
     needs: build-and-push-image
     runs-on: ubuntu-latest
-    if: success()
+    # Only deploy from main branch or manual trigger (not claude branches)
+    if: |
+      success() && (
+        github.ref == 'refs/heads/main' ||
+        (github.event_name == 'workflow_dispatch' && github.event.inputs.deploy == 'true')
+      )
 
     steps:
       - name: Notify Railway deployment
