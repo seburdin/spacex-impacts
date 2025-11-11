@@ -41,9 +41,9 @@ export default function Home() {
       <StatsOverlay mode={mode} />
 
       {/* Main Content */}
-      <div className="relative z-10 flex flex-col h-full p-6 pt-8">
+      <div className="relative z-10 flex flex-col h-full p-3 pt-4 sm:p-6 sm:pt-8">
         {/* Mode Selector */}
-        <div className="w-full flex justify-center mb-8 flex-shrink-0">
+        <div className="w-full flex justify-center mb-4 sm:mb-8 flex-shrink-0">
           <ModeSelector currentMode={mode} onModeChange={handleModeChange} />
         </div>
 
@@ -58,14 +58,14 @@ export default function Home() {
         </div>
 
         {/* Instructions and Controls */}
-        <div className="mt-6 text-center flex-shrink-0">
-          <div className="flex items-center justify-center gap-6">
-            <p className="text-slate-400 text-sm">
+        <div className="mt-3 sm:mt-6 text-center flex-shrink-0">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 px-3">
+            <p className="text-slate-400 text-xs sm:text-sm order-2 sm:order-1">
               Click and drag to rotate • Click markers to view details
             </p>
             <button
               onClick={() => setAutoRotate(!autoRotate)}
-              className="px-4 py-2 rounded-lg bg-slate-800/50 border border-slate-700/50 text-slate-300 text-sm hover:bg-slate-700/50 hover:border-slate-600 transition-all duration-200 flex items-center gap-2"
+              className="px-3 py-2 sm:px-4 rounded-lg bg-slate-800/50 border border-slate-700/50 text-slate-300 text-xs sm:text-sm hover:bg-slate-700/50 hover:border-slate-600 transition-all duration-200 flex items-center gap-2 order-1 sm:order-2 w-full sm:w-auto justify-center"
             >
               {autoRotate ? (
                 <>
