@@ -5,12 +5,13 @@ import createGlobe, { COBEOptions } from 'cobe'
 import { generateSatellitePositions } from '@/lib/utils'
 import countriesData from '@/data/countries.json'
 import impactStoriesData from '@/data/impact-stories.json'
+import { MarkerData } from '@/lib/types'
 
 export type ViewMode = 'countries' | 'satellites' | 'stories'
 
 interface GlobeProps {
   mode: ViewMode
-  onMarkerClick?: (data: any) => void
+  onMarkerClick?: (data: MarkerData) => void
   className?: string
 }
 
@@ -19,12 +20,6 @@ export default function Globe({ mode, onMarkerClick, className = '' }: GlobeProp
   const pointerInteracting = useRef<number | null>(null)
   const pointerInteractionMovement = useRef(0)
   const [rotation, setRotation] = useState(0)
-  const locationToAngles = (lat: number, long: number) => {
-    return [
-      Math.PI - ((long * Math.PI) / 180 - Math.PI / 2),
-      (lat * Math.PI) / 180
-    ]
-  }
 
   useEffect(() => {
     let phi = 0
@@ -106,16 +101,11 @@ export default function Globe({ mode, onMarkerClick, className = '' }: GlobeProp
         }
       }
 
-      const onClick = (e: MouseEvent) => {
+      const onClick = () => {
         if (!onMarkerClick) return
 
-        // Calculate which marker was clicked
-        const rect = canvas.getBoundingClientRect()
-        const x = e.clientX - rect.left
-        const y = e.clientY - rect.top
-
         // Simple proximity detection (in production, you'd want more accurate hit detection)
-        let clickedItem = null
+        let clickedItem: MarkerData | null = null
 
         if (mode === 'countries') {
           clickedItem = countriesData[Math.floor(Math.random() * countriesData.length)]
