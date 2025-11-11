@@ -13,9 +13,10 @@ interface GlobeProps {
   mode: ViewMode
   onMarkerClick?: (data: MarkerData) => void
   className?: string
+  autoRotate?: boolean
 }
 
-export default function Globe({ mode, onMarkerClick, className = '' }: GlobeProps) {
+export default function Globe({ mode, onMarkerClick, className = '', autoRotate = true }: GlobeProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const pointerInteracting = useRef<number | null>(null)
   const pointerInteractionMovement = useRef(0)
@@ -77,7 +78,7 @@ export default function Globe({ mode, onMarkerClick, className = '' }: GlobeProp
       markers: markers,
       onRender: (state) => {
         // Auto-rotation
-        if (!pointerInteracting.current) {
+        if (!pointerInteracting.current && autoRotate) {
           phi += 0.003
         }
         state.phi = phi + rotation
@@ -197,7 +198,7 @@ export default function Globe({ mode, onMarkerClick, className = '' }: GlobeProp
         window.removeEventListener('resize', onResize)
       }
     }
-  }, [mode, rotation, onMarkerClick])
+  }, [mode, rotation, onMarkerClick, autoRotate])
 
   return (
     <div className={`flex items-center justify-center ${className}`}>
