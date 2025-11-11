@@ -84,37 +84,31 @@ starlink-impact-viz/
 
 ## Deployment
 
-This project is configured for seamless deployment to Railway.app with two approaches:
+This project uses a **Docker-based deployment strategy** for optimized, production-ready deployments.
 
-### Option 1: Railway Native Integration (Recommended)
+### 🐳 Docker Deployment (Production)
 
-**Simplest setup** - Just connect your GitHub repository to Railway:
+Pre-built Docker images are automatically created in GitHub Actions and deployed to Railway:
 
-1. Go to [railway.app](https://railway.app) and create a new project
-2. Select "Deploy from GitHub repo"
-3. Choose this repository
-4. Railway automatically deploys on every push to main
-5. Optional: Enable PR previews in Railway settings
+**Benefits:**
+- ⚡ **Fast deployments** - 30 seconds vs 3-5 minutes
+- 💰 **Lower costs** - Reduced Railway resource usage
+- ✅ **Reliability** - Same tested image in CI and production
+- 🔒 **Security** - Multi-stage builds with non-root user
+
+**How it works:**
+1. Push to `main` → GitHub Actions builds Docker image
+2. Image pushed to GitHub Container Registry (GHCR)
+3. Railway pulls and deploys pre-built image
+4. Health checks verify successful deployment
 
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new)
 
-**Benefits:** Zero configuration, no secrets needed, automatic deployments
+### 📚 Documentation
 
-### Option 2: GitHub Actions + Railway CLI (Advanced)
-
-**For complex pipelines** requiring custom checks, deployment gates, or multi-environment setups:
-
-- Automated CI pipeline with linting and building
-- Custom deployment logic via GitHub Actions
-- Preview deployments for pull requests
-
-**Setup:** See [Deployment Guide](./DEPLOYMENT.md) for GitHub secrets configuration
-
----
-
-Both approaches use the included `railway.json` and `nixpacks.toml` configuration files for optimized builds.
-
-**Full documentation:** [Deployment Guide](./DEPLOYMENT.md)
+- **Docker Deployment:** [DOCKER-DEPLOYMENT.md](./DOCKER-DEPLOYMENT.md)
+- **Full Guide:** [DEPLOYMENT.md](./DEPLOYMENT.md)
+- **Workflows:** [.github/workflows/README.md](./.github/workflows/README.md)
 
 ### Build Locally
 

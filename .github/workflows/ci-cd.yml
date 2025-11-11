@@ -21,10 +21,12 @@ on:
 
 env:
   NODE_VERSION: '20'
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  build-and-test:
-    name: Build and Test
+  lint-and-test:
+    name: Lint and Type Check
     runs-on: ubuntu-latest
 
     steps:
@@ -47,38 +49,84 @@ jobs:
         run: npx tsc --noEmit
         continue-on-error: false
 
-      - name: Build project
-        run: npm run build
-        env:
-          NODE_ENV: production
-          # Skip font optimization in CI to avoid network issues
-          NEXT_DISABLE_FONT_CACHE: '1'
-        continue-on-error: false
-
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        if: success()
-        with:
-          name: build-artifacts
-          path: .next
-          retention-days: 7
-
-  deploy-to-railway:
-    name: Deploy to Railway
-    needs: build-and-test
+  build-and-push-image:
+    name: Build and Push Docker Image
     runs-on: ubuntu-latest
+    needs: lint-and-test
     if: |
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
       (github.event_name == 'workflow_dispatch' && github.event.inputs.deploy == 'true')
+    permissions:
+      contents: read
+      packages: write
+
+    outputs:
+      image-tag: ${{ steps.meta.outputs.tags }}
+      image-digest: ${{ steps.build.outputs.digest }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install Railway CLI
-        run: npm install -g @railway/cli
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      - name: Deploy to Railway
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        run: railway up --service ${{ secrets.RAILWAY_SERVICE_NAME || 'starlink-impact-viz' }}
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            # Tag with branch name
+            type=ref,event=branch
+            # Tag with PR number
+            type=ref,event=pr
+            # Tag with commit SHA
+            type=sha,prefix={{branch}}-,format=short
+            # Tag as latest for main branch
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+            # Tag with semantic version if available
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+
+      - name: Build and push Docker image
+        id: build
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64
+
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          subject-digest: ${{ steps.build.outputs.digest }}
+          push-to-registry: true
+
+  deploy-to-railway:
+    name: Deploy to Railway
+    needs: build-and-push-image
+    runs-on: ubuntu-latest
+    if: success()
+
+    steps:
+      - name: Notify Railway deployment
+        run: |
+          echo "🐳 Docker image built and pushed successfully!"
+          echo "📦 Image: ${{ needs.build-and-push-image.outputs.image-tag }}"
+          echo "🔐 Digest: ${{ needs.build-and-push-image.outputs.image-digest }}"
+          echo ""
+          echo "🚂 Railway will automatically pull and deploy the new image."
+          echo "Monitor deployment at: https://railway.app/dashboard"
