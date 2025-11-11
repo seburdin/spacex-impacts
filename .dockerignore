@@ -1,0 +1,36 @@
+# Dependencies
+node_modules
+npm-debug.log*
+
+# Build outputs
+.next
+out
+dist
+build
+
+# Development files
+.git
+.github
+.vscode
+.idea
+*.md
+!README.md
+
+# Environment files
+.env*.local
+.env
+
+# Testing
+coverage
+.nyc_output
+
+# Misc
+.DS_Store
+*.log
+*.swp
+*.swo
+
+# Cache directories
+.cache
+.turbo
+.eslintcache
