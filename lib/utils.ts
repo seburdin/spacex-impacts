@@ -8,7 +8,14 @@ export function cn(...inputs: ClassValue[]) {
 // Generate satellite positions for visualization
 // Starlink satellites orbit at ~550km altitude in multiple orbital shells
 export function generateSatellitePositions(count: number = 6900) {
-  const satellites = []
+  const satellites: Array<{
+    id: number
+    location: [number, number]
+    size: number
+    altitude: number
+    inclination: number
+    shell: number
+  }> = []
 
   // Starlink constellation uses multiple orbital shells
   const shells = [

@@ -37,7 +37,7 @@ export default function Globe({ mode, onMarkerClick, className = '' }: GlobeProp
 
     if (mode === 'countries') {
       markers = countriesData.map(country => ({
-        location: country.coordinates,
+        location: country.coordinates as [number, number],
         size: 0.08,
       }))
     } else if (mode === 'satellites') {
@@ -48,7 +48,7 @@ export default function Globe({ mode, onMarkerClick, className = '' }: GlobeProp
       }))
     } else if (mode === 'stories') {
       markers = impactStoriesData.map(story => ({
-        location: story.coordinates,
+        location: story.coordinates as [number, number],
         size: 0.1,
       }))
     }
@@ -108,9 +108,9 @@ export default function Globe({ mode, onMarkerClick, className = '' }: GlobeProp
         let clickedItem: MarkerData | null = null
 
         if (mode === 'countries') {
-          clickedItem = countriesData[Math.floor(Math.random() * countriesData.length)]
+          clickedItem = countriesData[Math.floor(Math.random() * countriesData.length)] as MarkerData
         } else if (mode === 'stories') {
-          clickedItem = impactStoriesData[Math.floor(Math.random() * impactStoriesData.length)]
+          clickedItem = impactStoriesData[Math.floor(Math.random() * impactStoriesData.length)] as MarkerData
         }
 
         if (clickedItem) {
