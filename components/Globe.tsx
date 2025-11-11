@@ -154,7 +154,7 @@ export default function Globe({ mode, onMarkerClick, className = '' }: GlobeProp
           const [lat, lng] = marker.location
 
           // Convert marker to 3D
-          let markerPos = latLngToVector3(lat, lng)
+          const markerPos = latLngToVector3(lat, lng)
 
           // Apply globe rotation to marker
           const rotated = rotatePoint(markerPos.x, markerPos.z, -currentPhi)
