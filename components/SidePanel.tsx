@@ -3,11 +3,12 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, ExternalLink, Users, MapPin, DollarSign } from 'lucide-react'
 import { ViewMode } from './Globe'
+import { MarkerData, Country, ImpactStory } from '@/lib/types'
 
 interface SidePanelProps {
   isOpen: boolean
   onClose: () => void
-  data: any
+  data: MarkerData | null
   mode: ViewMode
 }
 
@@ -46,10 +47,10 @@ export default function SidePanel({ isOpen, onClose, data, mode }: SidePanelProp
 
             <div className="p-8">
               {mode === 'countries' && (
-                <CountryView data={data} />
+                <CountryView data={data as Country} />
               )}
               {mode === 'stories' && (
-                <StoryView data={data} />
+                <StoryView data={data as ImpactStory} />
               )}
             </div>
           </motion.div>
@@ -59,7 +60,7 @@ export default function SidePanel({ isOpen, onClose, data, mode }: SidePanelProp
   )
 }
 
-function CountryView({ data }: { data: any }) {
+function CountryView({ data }: { data: Country }) {
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -110,7 +111,7 @@ function CountryView({ data }: { data: any }) {
   )
 }
 
-function StoryView({ data }: { data: any }) {
+function StoryView({ data }: { data: ImpactStory }) {
   const categoryColors: Record<string, string> = {
     'Disaster Help': 'from-red-500/20 to-orange-500/20 border-red-500/30',
     'Education': 'from-blue-500/20 to-cyan-500/20 border-blue-500/30',

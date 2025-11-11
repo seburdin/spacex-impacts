@@ -5,13 +5,14 @@ import Globe, { ViewMode } from '@/components/Globe'
 import SidePanel from '@/components/SidePanel'
 import ModeSelector from '@/components/ModeSelector'
 import StatsOverlay from '@/components/StatsOverlay'
+import { MarkerData } from '@/lib/types'
 
 export default function Home() {
   const [mode, setMode] = useState<ViewMode>('countries')
-  const [selectedData, setSelectedData] = useState<any>(null)
+  const [selectedData, setSelectedData] = useState<MarkerData | null>(null)
   const [isPanelOpen, setIsPanelOpen] = useState(false)
 
-  const handleMarkerClick = (data: any) => {
+  const handleMarkerClick = (data: MarkerData) => {
     setSelectedData(data)
     setIsPanelOpen(true)
   }
