@@ -40,14 +40,14 @@ export default function Home() {
       <StatsOverlay mode={mode} />
 
       {/* Main Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center h-full p-6">
+      <div className="relative z-10 flex flex-col h-full p-6 pt-8">
         {/* Mode Selector */}
-        <div className="mb-8">
+        <div className="w-full flex justify-center mb-8 flex-shrink-0">
           <ModeSelector currentMode={mode} onModeChange={handleModeChange} />
         </div>
 
         {/* Globe */}
-        <div className="flex-1 w-full max-w-5xl flex items-center justify-center">
+        <div className="flex-1 w-full max-w-5xl mx-auto flex items-center justify-center min-h-0">
           <Globe
             mode={mode}
             onMarkerClick={handleMarkerClick}
@@ -56,7 +56,7 @@ export default function Home() {
         </div>
 
         {/* Instructions */}
-        <div className="mt-6 text-center">
+        <div className="mt-6 text-center flex-shrink-0">
           <p className="text-slate-400 text-sm">
             Click and drag to rotate • Click markers to view details
           </p>
