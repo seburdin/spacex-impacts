@@ -8,6 +8,16 @@ on:
   pull_request:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: 'Deploy to Railway after build'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
 
 env:
   NODE_VERSION: '20'
@@ -33,13 +43,21 @@ jobs:
       - name: Run linter
         run: npm run lint
 
+      - name: Type check
+        run: npx tsc --noEmit
+        continue-on-error: false
+
       - name: Build project
         run: npm run build
         env:
           NODE_ENV: production
+          # Skip font optimization in CI to avoid network issues
+          NEXT_DISABLE_FONT_CACHE: '1'
+        continue-on-error: false
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
+        if: success()
         with:
           name: build-artifacts
           path: .next
@@ -49,7 +67,9 @@ jobs:
     name: Deploy to Railway
     needs: build-and-test
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.deploy == 'true')
 
     steps:
       - name: Checkout code
