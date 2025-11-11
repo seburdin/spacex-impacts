@@ -82,29 +82,39 @@ starlink-impact-viz/
 - Official Starlink stories from starlink.com
 - Verified impact data from news sources
 
-## CI/CD & Deployment
+## Deployment
 
-This project features automated CI/CD pipelines using GitHub Actions and Railway.app.
+This project is configured for seamless deployment to Railway.app with two approaches:
 
-### Automated Deployment Pipeline
+### Option 1: Railway Native Integration (Recommended)
 
-- **Continuous Integration**: Automated testing, linting, and building on every push
-- **Continuous Deployment**: Automatic deployment to Railway.app on main branch
-- **Preview Deployments**: Automatic preview environments for pull requests
+**Simplest setup** - Just connect your GitHub repository to Railway:
 
-### Quick Deploy to Railway
+1. Go to [railway.app](https://railway.app) and create a new project
+2. Select "Deploy from GitHub repo"
+3. Choose this repository
+4. Railway automatically deploys on every push to main
+5. Optional: Enable PR previews in Railway settings
 
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new)
 
-### Setup Instructions
+**Benefits:** Zero configuration, no secrets needed, automatic deployments
 
-For detailed deployment setup including:
-- GitHub Actions configuration
-- Railway.app integration
-- Required secrets and environment variables
-- Monitoring and troubleshooting
+### Option 2: GitHub Actions + Railway CLI (Advanced)
 
-See the complete [Deployment Guide](./DEPLOYMENT.md).
+**For complex pipelines** requiring custom checks, deployment gates, or multi-environment setups:
+
+- Automated CI pipeline with linting and building
+- Custom deployment logic via GitHub Actions
+- Preview deployments for pull requests
+
+**Setup:** See [Deployment Guide](./DEPLOYMENT.md) for GitHub secrets configuration
+
+---
+
+Both approaches use the included `railway.json` and `nixpacks.toml` configuration files for optimized builds.
+
+**Full documentation:** [Deployment Guide](./DEPLOYMENT.md)
 
 ### Build Locally
 

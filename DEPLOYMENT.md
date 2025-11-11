@@ -1,185 +1,325 @@
 # Deployment Guide
 
-This repository is configured with automated CI/CD pipelines using GitHub Actions and Railway.app.
+This repository supports two deployment approaches for Railway.app:
 
-## Overview
+1. **Railway Native Integration** (Recommended) - Simple, automated deployment
+2. **GitHub Actions + Railway CLI** (Advanced) - For complex CI/CD requirements
 
-The deployment pipeline consists of:
+Choose the approach that best fits your needs.
 
-1. **Continuous Integration (CI)**: Automated testing and building on every push
-2. **Continuous Deployment (CD)**: Automated deployment to Railway.app on main branch
-3. **Preview Deployments**: Automatic preview deployments for pull requests
+---
 
-## GitHub Actions Workflows
+## Approach 1: Railway Native GitHub Integration (Recommended)
 
-### Main CI/CD Pipeline (`ci-cd.yml`)
+**Best for:** Most use cases - simple, reliable, and fully automated.
 
-Triggers on:
+### Setup Steps
+
+#### 1. Create Railway Account & Project
+
+1. Go to [railway.app](https://railway.app) and sign up/login
+2. Click "New Project"
+3. Select "Deploy from GitHub repo"
+4. Connect your GitHub account (if not already connected)
+5. Select this repository (`spacex-impacts`)
+
+#### 2. Configure Deployment
+
+Railway will automatically:
+- Detect this is a Next.js application
+- Use the `railway.json` and `nixpacks.toml` configuration files
+- Install dependencies with `npm ci`
+- Build with `npm run build`
+- Start the application with `npm start`
+
+#### 3. Set Environment Variables (if needed)
+
+If your application requires environment variables:
+1. In Railway dashboard, select your service
+2. Go to "Variables" tab
+3. Add variables like:
+   - `NODE_ENV=production` (usually set automatically)
+   - Any API keys or configuration needed
+
+#### 4. Enable PR Previews (Optional)
+
+1. Go to your service settings in Railway
+2. Enable "PR Deploys"
+3. Railway will now create preview deployments for pull requests automatically
+
+### How It Works
+
+Once set up, Railway automatically:
+- **Monitors your repository** for changes to the main branch
+- **Deploys immediately** when you push to main
+- **Creates preview environments** for pull requests (if enabled)
+- **Manages build caching** for faster deployments
+- **Provides deployment logs** in the Railway dashboard
+
+### Benefits
+
+- ✅ **Zero configuration** - works out of the box
+- ✅ **No secrets to manage** - Railway handles authentication
+- ✅ **Automatic deployments** on every push
+- ✅ **Built-in preview environments** for PRs
+- ✅ **Optimized builds** with smart caching
+- ✅ **Simple monitoring** in Railway dashboard
+
+### Deployment Status
+
+- View deployments in the Railway dashboard
+- Get deployment URLs automatically
+- Monitor logs and metrics in real-time
+
+---
+
+## Approach 2: GitHub Actions + Railway CLI (Advanced)
+
+**Best for:** Complex pipelines requiring custom checks, multi-environment deployments, or deployment gates.
+
+### When to Use This Approach
+
+Choose GitHub Actions if you need:
+- Custom security scans or compliance checks before deployment
+- Multi-cloud deployments (Railway + other platforms)
+- Manual approval gates for production deployments
+- Custom test suites that must pass before deploy
+- Integration with other GitHub Actions workflows
+- Deployment to multiple Railway services/environments
+
+### Setup Steps
+
+#### 1. Get Railway Token
+
+1. Go to [Railway Dashboard](https://railway.app/account/tokens)
+2. Click "New Token"
+3. Give it a descriptive name (e.g., "GitHub Actions")
+4. Copy the token (save it securely - shown only once)
+
+#### 2. Add GitHub Secrets
+
+1. Go to your GitHub repository
+2. Navigate to `Settings > Secrets and variables > Actions`
+3. Click "New repository secret"
+4. Add these secrets:
+
+**Required:**
+- **Name:** `RAILWAY_TOKEN`
+- **Value:** Your Railway API token from step 1
+
+**Optional:**
+- **Name:** `RAILWAY_SERVICE_NAME`
+- **Value:** Your Railway service name (defaults to `starlink-impact-viz`)
+
+#### 3. Create Railway Project
+
+1. Create a new project in [Railway](https://railway.app)
+2. Create a service in the project
+3. Note the service name for the GitHub secret above
+
+### GitHub Actions Workflows
+
+This repository includes two workflows:
+
+#### Main CI/CD Pipeline (`.github/workflows/ci-cd.yml`)
+
+**Triggers on:**
 - Push to `main` branch
 - Push to `claude/**` branches
 - Pull requests to `main`
 
-Steps:
+**Steps:**
 1. Checkout code
 2. Setup Node.js 20
-3. Install dependencies with `npm ci`
-4. Run linter
-5. Build the Next.js application
+3. Install dependencies (`npm ci`)
+4. Run linter (`npm run lint`)
+5. Build the application (`npm run build`)
 6. Upload build artifacts
 7. Deploy to Railway (only on `main` branch pushes)
 
-### Railway Preview Deployment (`railway-preview.yml`)
+#### PR Preview Deployment (`.github/workflows/railway-preview.yml`)
 
-Triggers on:
+**Triggers on:**
 - Pull requests to `main` branch
 
-Steps:
+**Steps:**
 1. Build and test the application
-2. Deploy a preview environment to Railway
-3. Comment on the PR with deployment status
+2. Deploy preview environment to Railway
+3. Comment on PR with deployment status
 
-## Railway Setup
+### Customizing Workflows
 
-### Prerequisites
+You can modify the workflows in `.github/workflows/` to add:
 
-1. **Railway Account**: Create an account at [railway.app](https://railway.app)
-2. **Railway Project**: Create a new project in Railway
-3. **Railway Service**: Create a service in your project
+```yaml
+# Add security scanning
+- name: Run security audit
+  run: npm audit --audit-level=high
 
-### Required GitHub Secrets
+# Add custom tests
+- name: Run integration tests
+  run: npm run test:integration
 
-Configure these secrets in your GitHub repository settings (`Settings > Secrets and variables > Actions`):
+# Add manual approval for production
+environment:
+  name: production
+  url: https://your-app.railway.app
 
-#### `RAILWAY_TOKEN` (Required)
-Your Railway API token for authentication.
+# Deploy to multiple environments
+- name: Deploy to staging
+  if: github.ref == 'refs/heads/develop'
+  run: railway up --service staging-service
+```
 
-**How to get it:**
-1. Go to [Railway Dashboard](https://railway.app/account/tokens)
-2. Click "New Token"
-3. Give it a descriptive name (e.g., "GitHub Actions")
-4. Copy the token
-5. Add it as a secret named `RAILWAY_TOKEN` in your GitHub repository
+### Benefits
 
-#### `RAILWAY_SERVICE_NAME` (Optional)
-The name of your Railway service. Defaults to `starlink-impact-viz` if not set.
+- ✅ **Full control** over CI/CD pipeline
+- ✅ **Custom validation** before deployment
+- ✅ **Multi-environment support**
+- ✅ **Deployment gates** and approvals
+- ✅ **Visible in GitHub Actions** tab
+- ✅ **Extensible** for complex workflows
 
-**How to get it:**
-1. Go to your Railway project
-2. Click on your service
-3. Go to Settings
-4. Copy the service name
-5. Add it as a secret named `RAILWAY_SERVICE_NAME` in your GitHub repository
+### Trade-offs
 
-### Railway Configuration Files
+- ❌ More complex setup
+- ❌ Requires managing secrets
+- ❌ Two systems to monitor
 
-#### `railway.json`
-Main Railway configuration file that defines:
-- Build settings (uses Nixpacks builder)
-- Build command: `npm ci && npm run build`
-- Start command: `npm start`
-- Restart policy: On failure with 10 max retries
+---
 
-#### `nixpacks.toml`
-Nixpacks configuration for optimized builds:
-- Node.js 20 runtime
-- Efficient caching
-- Optimized install and build phases
+## Configuration Files
+
+Both approaches use these configuration files:
+
+### `railway.json`
+
+Main Railway configuration:
+```json
+{
+  "$schema": "https://railway.app/railway.schema.json",
+  "build": {
+    "builder": "NIXPACKS",
+    "buildCommand": "npm ci && npm run build"
+  },
+  "deploy": {
+    "startCommand": "npm start",
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 10
+  }
+}
+```
+
+### `nixpacks.toml`
+
+Optimized build configuration:
+```toml
+[phases.setup]
+nixPkgs = ['nodejs_20']
+
+[phases.install]
+cmds = ['npm ci']
+
+[phases.build]
+cmds = ['npm run build']
+
+[start]
+cmd = 'npm start'
+```
+
+---
 
 ## Environment Variables
 
-If your application requires environment variables (API keys, database URLs, etc.):
+If your application needs environment variables:
+
+### In Railway (Approach 1 & 2)
 
 1. Go to your Railway project
 2. Select your service
-3. Go to "Variables" tab
-4. Add your environment variables
+3. Click "Variables" tab
+4. Add variables
 
-Common Next.js environment variables:
+Common Next.js variables:
 ```
 NODE_ENV=production
-NEXT_PUBLIC_API_URL=your-api-url
+NEXT_PUBLIC_API_URL=https://api.example.com
 ```
 
-## Deployment Process
+### In GitHub Actions (Approach 2 only)
 
-### Automatic Deployment (Main Branch)
+For build-time environment variables in GitHub Actions:
 
-1. Make changes to your code
-2. Commit and push to `main` branch
-3. GitHub Actions automatically:
-   - Runs tests and linting
-   - Builds the application
-   - Deploys to Railway
-4. Check Railway dashboard for deployment status
-
-### Preview Deployment (Pull Requests)
-
-1. Create a pull request to `main`
-2. GitHub Actions automatically:
-   - Builds and tests the code
-   - Creates a preview deployment on Railway
-   - Comments on the PR with status
-3. Review the preview before merging
-
-### Manual Deployment
-
-You can also deploy manually using Railway CLI:
-
-```bash
-# Install Railway CLI
-npm install -g @railway/cli
-
-# Login to Railway
-railway login
-
-# Link to your project
-railway link
-
-# Deploy
-railway up
+```yaml
+- name: Build project
+  run: npm run build
+  env:
+    NODE_ENV: production
+    NEXT_PUBLIC_API_URL: ${{ secrets.API_URL }}
 ```
 
-## Monitoring
+---
 
-### GitHub Actions
-
-Monitor your deployments:
-1. Go to the "Actions" tab in your GitHub repository
-2. View workflow runs and their status
-3. Check logs for any errors
+## Monitoring & Troubleshooting
 
 ### Railway Dashboard
 
-Monitor your application:
-1. Go to [Railway Dashboard](https://railway.app/dashboard)
-2. Select your project
-3. View deployment logs, metrics, and status
+**For both approaches:**
+1. View deployment logs
+2. Monitor resource usage
+3. Check deployment status
+4. View application metrics
 
-## Troubleshooting
+**Access:** [Railway Dashboard](https://railway.app/dashboard)
 
-### Build Fails
+### GitHub Actions (Approach 2 only)
 
-- Check GitHub Actions logs for error messages
-- Ensure all dependencies are in `package.json`
-- Verify Node.js version compatibility
+1. Go to "Actions" tab in your repository
+2. View workflow runs and status
+3. Check detailed logs for each step
+4. Debug failed deployments
 
-### Deployment Fails
+### Common Issues
 
+#### Build Fails
+
+**Symptoms:** Deployment fails during build phase
+
+**Solutions:**
+- Check Railway/GitHub Actions logs for errors
+- Verify all dependencies are in `package.json`
+- Ensure Node.js version compatibility (20.x)
+- Check for TypeScript errors: `npm run build` locally
+
+#### Deployment Fails
+
+**Railway Native Integration:**
+- Verify repository connection in Railway
+- Check Railway service settings
+- Review deployment logs
+
+**GitHub Actions:**
 - Verify `RAILWAY_TOKEN` secret is set correctly
 - Check Railway service name matches
-- Review Railway deployment logs
-- Ensure environment variables are set in Railway
+- Ensure token has deployment permissions
 
-### Application Errors
+#### Application Errors
 
-- Check Railway logs in the dashboard
-- Verify environment variables are configured
-- Check for missing dependencies
-- Review application error logs
+**For both approaches:**
+- Check Railway logs in dashboard
+- Verify environment variables are set
+- Test production build locally:
+  ```bash
+  npm ci
+  npm run build
+  npm start
+  ```
 
-## Local Development
+---
 
-Test the production build locally:
+## Local Testing
+
+Test your production build locally before deploying:
 
 ```bash
 # Install dependencies
@@ -192,16 +332,103 @@ npm run build
 npm start
 ```
 
-## Support
+Open [http://localhost:3000](http://localhost:3000) to test.
 
-- GitHub Actions Documentation: https://docs.github.com/en/actions
-- Railway Documentation: https://docs.railway.app
-- Next.js Deployment: https://nextjs.org/docs/deployment
+---
+
+## Migration Between Approaches
+
+### From Railway Native to GitHub Actions
+
+1. Keep your Railway project and service
+2. Get Railway token
+3. Add GitHub secrets
+4. Workflows will start working on next push
+
+**Note:** Railway will still deploy on push, so you'll have duplicate deployments. Disconnect the GitHub integration in Railway if you want only GitHub Actions.
+
+### From GitHub Actions to Railway Native
+
+1. Remove or disable GitHub Actions workflows
+2. Connect repository in Railway dashboard
+3. Railway takes over deployments
+4. Optionally remove GitHub secrets
+
+---
+
+## Best Practices
+
+### For Railway Native Integration
+
+- ✅ Use Railway's environment variables for configuration
+- ✅ Enable PR previews for testing before merge
+- ✅ Monitor deployments in Railway dashboard
+- ✅ Use Railway's rollback feature if needed
+
+### For GitHub Actions
+
+- ✅ Keep secrets secure and rotate regularly
+- ✅ Use environment protection rules for production
+- ✅ Test workflows on branches before merging
+- ✅ Monitor both GitHub Actions and Railway
+
+### General
+
+- ✅ Never commit secrets or API keys
+- ✅ Use environment variables for all configuration
+- ✅ Test builds locally before pushing
+- ✅ Review deployment logs after changes
+- ✅ Set up alerts for failed deployments
+
+---
+
+## Quick Start Commands
+
+### Railway CLI (Manual Deployment)
+
+```bash
+# Install Railway CLI
+npm install -g @railway/cli
+
+# Login
+railway login
+
+# Link to project
+railway link
+
+# Deploy manually
+railway up
+
+# View logs
+railway logs
+
+# Open dashboard
+railway open
+```
+
+---
+
+## Support Resources
+
+- **Railway Documentation:** https://docs.railway.app
+- **Railway Discord:** https://discord.gg/railway
+- **GitHub Actions Docs:** https://docs.github.com/en/actions
+- **Next.js Deployment:** https://nextjs.org/docs/deployment
+
+---
 
 ## Security Notes
 
-- Never commit secrets or API keys to the repository
-- Always use GitHub Secrets for sensitive data
-- Keep your `RAILWAY_TOKEN` secure
-- Rotate tokens regularly
-- Use environment variables for configuration
+### For All Approaches
+
+- Never commit secrets, tokens, or API keys to the repository
+- Use environment variables for all sensitive data
+- Review Railway access logs regularly
+- Keep dependencies updated for security patches
+
+### For GitHub Actions
+
+- Rotate `RAILWAY_TOKEN` regularly
+- Use environment protection rules
+- Limit token permissions to minimum required
+- Review Actions logs for suspicious activity
