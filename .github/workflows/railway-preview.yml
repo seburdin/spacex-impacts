@@ -4,12 +4,22 @@ on:
   pull_request:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy'
+        required: false
+        default: 'preview'
+        type: choice
+        options:
+          - 'preview'
+          - 'staging'
 
 jobs:
   deploy-preview:
     name: Deploy Preview to Railway
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
 
     steps:
       - name: Checkout code

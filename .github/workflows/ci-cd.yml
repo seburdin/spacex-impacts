@@ -8,6 +8,16 @@ on:
   pull_request:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: 'Deploy to Railway after build'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
 
 env:
   NODE_VERSION: '20'
@@ -57,7 +67,9 @@ jobs:
     name: Deploy to Railway
     needs: build-and-test
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.deploy == 'true')
 
     steps:
       - name: Checkout code
