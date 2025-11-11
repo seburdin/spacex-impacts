@@ -82,12 +82,35 @@ starlink-impact-viz/
 - Official Starlink stories from starlink.com
 - Verified impact data from news sources
 
-## Deploy
+## CI/CD & Deployment
 
-Deploy easily on [Vercel](https://vercel.com/new):
+This project features automated CI/CD pipelines using GitHub Actions and Railway.app.
+
+### Automated Deployment Pipeline
+
+- **Continuous Integration**: Automated testing, linting, and building on every push
+- **Continuous Deployment**: Automatic deployment to Railway.app on main branch
+- **Preview Deployments**: Automatic preview environments for pull requests
+
+### Quick Deploy to Railway
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new)
+
+### Setup Instructions
+
+For detailed deployment setup including:
+- GitHub Actions configuration
+- Railway.app integration
+- Required secrets and environment variables
+- Monitoring and troubleshooting
+
+See the complete [Deployment Guide](./DEPLOYMENT.md).
+
+### Build Locally
 
 ```bash
 npm run build
+npm start
 ```
 
 ## Credits
