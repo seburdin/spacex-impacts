@@ -1,9 +1,24 @@
 # Deployment Guide
 
-This repository supports two deployment approaches for Railway.app:
+This repository uses a **Docker-based deployment strategy** with pre-built images for optimized deployments to Railway.app.
 
-1. **Railway Native Integration** (Recommended) - Simple, automated deployment
-2. **GitHub Actions + Railway CLI** (Advanced) - For complex CI/CD requirements
+## 📦 Docker Deployment (Current)
+
+The project now uses Docker containers with images built in GitHub Actions and deployed to Railway. This provides:
+- ⚡ **Faster deployments** (30 seconds vs 3-5 minutes)
+- 💰 **Lower costs** (reduced Railway build resources)
+- ✅ **Better reliability** (same tested image everywhere)
+
+**📖 See [DOCKER-DEPLOYMENT.md](./DOCKER-DEPLOYMENT.md) for complete Docker deployment documentation.**
+
+---
+
+## Alternative Deployment Approaches
+
+For reference, Railway also supports these deployment methods:
+
+1. **Railway Native Integration** - Simple, automated deployment from GitHub
+2. **GitHub Actions + Railway CLI** - Custom CI/CD with deployment control
 
 Choose the approach that best fits your needs.
 
