@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import Globe, { ViewMode } from '@/components/Globe'
+import MapboxGlobe from '@/components/MapboxGlobe'
+import GlobeTypeSelector, { GlobeType } from '@/components/GlobeTypeSelector'
 import SidePanel from '@/components/SidePanel'
 import ModeSelector from '@/components/ModeSelector'
 import StatsOverlay from '@/components/StatsOverlay'
@@ -12,6 +14,7 @@ export default function Home() {
   const [selectedData, setSelectedData] = useState<MarkerData | null>(null)
   const [isPanelOpen, setIsPanelOpen] = useState(false)
   const [autoRotate, setAutoRotate] = useState(true)
+  const [globeType, setGlobeType] = useState<GlobeType>('cobe')
 
   const handleMarkerClick = (data: MarkerData) => {
     setSelectedData(data)
@@ -42,19 +45,29 @@ export default function Home() {
 
       {/* Main Content */}
       <div className="relative z-10 flex flex-col h-full p-3 pt-4 sm:p-6 sm:pt-8">
-        {/* Mode Selector */}
-        <div className="w-full flex justify-center mb-4 sm:mb-8 flex-shrink-0">
+        {/* Mode Selector and Globe Type Selector */}
+        <div className="w-full flex flex-col items-center gap-3 sm:gap-4 mb-4 sm:mb-8 flex-shrink-0">
           <ModeSelector currentMode={mode} onModeChange={handleModeChange} />
+          <GlobeTypeSelector currentType={globeType} onTypeChange={setGlobeType} />
         </div>
 
         {/* Globe */}
         <div className="flex-1 w-full max-w-5xl mx-auto flex items-center justify-center min-h-0">
-          <Globe
-            mode={mode}
-            onMarkerClick={handleMarkerClick}
-            className="w-full h-full"
-            autoRotate={autoRotate}
-          />
+          {globeType === 'cobe' ? (
+            <Globe
+              mode={mode}
+              onMarkerClick={handleMarkerClick}
+              className="w-full h-full"
+              autoRotate={autoRotate}
+            />
+          ) : (
+            <MapboxGlobe
+              mode={mode}
+              onMarkerClick={handleMarkerClick}
+              className="w-full h-full"
+              autoRotate={autoRotate}
+            />
+          )}
         </div>
 
         {/* Instructions and Controls */}
