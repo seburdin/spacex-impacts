@@ -1,8 +1,23 @@
 # Starlink Impact Visualization
 
-An elegant, inspiring 3D visualization showcasing Starlink's global deployment and positive impact on communities worldwide. Built with Next.js, React, and Cobe for a stunning interactive globe experience.
+An elegant, inspiring 3D visualization showcasing Starlink's global deployment and positive impact on communities worldwide. Built with Next.js, React, with dual globe rendering options for stunning interactive experiences.
 
 ## Features
+
+### Two Globe Visualization Options
+
+**Abstract Globe (COBE)** - Clean, minimalist WebGL-based visualization
+- Lightweight (only 5kB!)
+- Smooth performance with thousands of markers
+- Perfect for quick overview and elegant presentation
+
+**Satellite Globe (Mapbox)** - Photorealistic Earth with satellite imagery
+- High-resolution satellite imagery from Mapbox
+- 3D globe projection with realistic textures
+- Atmospheric effects and space background
+- Similar look and feel to professional satellite trackers
+
+Switch between visualizations instantly using the "Globe Style" toggle.
 
 ### Three Interactive Modes
 
@@ -24,8 +39,10 @@ An elegant, inspiring 3D visualization showcasing Starlink's global deployment a
 - **Framework**: Next.js 16 with App Router
 - **Language**: TypeScript
 - **UI Library**: React 19
-- **3D Globe**: Cobe (WebGL-based, only 5kB!)
-- **Styling**: TailwindCSS
+- **3D Globe Rendering**:
+  - **COBE**: Lightweight WebGL-based abstract globe (5kB)
+  - **Mapbox GL JS**: Photorealistic satellite imagery globe with 3D projection
+- **Styling**: TailwindCSS v4
 - **Animations**: Framer Motion
 - **Icons**: Lucide React
 
@@ -36,6 +53,20 @@ An elegant, inspiring 3D visualization showcasing Starlink's global deployment a
 ```bash
 npm install
 ```
+
+### Configuration (Optional - For Mapbox Globe)
+
+To use the satellite imagery globe visualization, you'll need a free Mapbox access token:
+
+1. Sign up at [Mapbox](https://account.mapbox.com/)
+2. Copy your access token
+3. Create a `.env.local` file in the root directory:
+
+```bash
+NEXT_PUBLIC_MAPBOX_TOKEN=your_mapbox_access_token_here
+```
+
+**Note**: The abstract globe (COBE) works without any configuration. Mapbox token is only needed for the satellite imagery option.
 
 ### Run Development Server
 
@@ -56,14 +87,16 @@ Open [http://localhost:3000](http://localhost:3000) to view the visualization.
 
 ```
 starlink-impact-viz/
-├── app/                  # Next.js pages
-├── components/           # React components
-│   ├── Globe.tsx        # 3D rotating globe
-│   ├── SidePanel.tsx    # Info display
-│   ├── ModeSelector.tsx # Mode switching
-│   └── StatsOverlay.tsx # Statistics
-├── data/                # JSON data files
-└── lib/                 # Utilities
+├── app/                      # Next.js pages
+├── components/               # React components
+│   ├── Globe.tsx            # COBE 3D rotating globe
+│   ├── MapboxGlobe.tsx      # Mapbox satellite globe
+│   ├── GlobeTypeSelector.tsx # Globe style toggle
+│   ├── SidePanel.tsx        # Info display
+│   ├── ModeSelector.tsx     # Mode switching
+│   └── StatsOverlay.tsx     # Statistics
+├── data/                    # JSON data files
+└── lib/                     # Utilities
 ```
 
 ## Featured Impact Stories
